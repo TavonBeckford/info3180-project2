@@ -129,7 +129,7 @@ def addNewCar():
         year = form.year.data
         transmission = form.transmission.data
         car_type = form.car_type.data
-        price = int(form.price.data)
+        price = float(form.price.data)
         description = form.description.data
         photo = form.photo.data
         photo = uploadPhoto(form.photo.data)

@@ -74,22 +74,22 @@ const Home = {
     template: `
     <div class="flex-container">
 
-    <div class="unitedauto-login box-shadow border-gray">
-      <div class="login-title flex-row justify-center border-bottom">
-        <h2>Buy and Sell Cars Online</h2>
+    <div class="unitedauto-login">
+      <div class="login-title">
+        <h2>Buy and Sell <br> Cars Online</h2>
       </div>
 
       <div class="login-desc">
-        <p>United Auto Sales provides the fastest, easiest and most user friendly way to buy or sell cars online.
-        Find a Great Price on the Vechile You Want.</p>
+        <p>United Auto Sales provides the fastest, easiest and<br> most user friendly way to buy or sell cars online.
+        Find a<br> Great Price on the Vechile You Want.</p>
       </div>
 
-      <div class="login-buttons flex-row justify-space-around">
-        <router-link to= "/register" tag= "button" type="button" class="btn btn-success">Register</router-link>
-        <router-link to= "/login" tag= "button" type="button" class="btn btn-primary">Login</button></router-link>
+      <div class="login-buttons">
+        <router-link to= "/register" tag= "button" type="button" class="btn btn-success" id="registerbtn">Register</router-link>
+        <router-link to= "/login" tag= "button" type="button" class="btn btn-primary" id="loginbtn">Login</button></router-link>
       </div>
     </div>
-    <div class="login-image border-gray">
+    <div class="login-image">
       <img src="/static/assets/unitedautologo.jpg" alt="landsape" class="home-img">
     </div>
 
@@ -109,7 +109,7 @@ const Register ={
       <div class = "content-holder width-100">
   
         <!--Heading-->
-        <div class="flex-container">
+        <div class="header-container">
           <div class="header">
             <h1>Register New User</h1>
           </div>
@@ -117,48 +117,46 @@ const Register ={
   
   
         <!--Form-->
-        <div class="form-container">
-          <div class="form-container">
+        <div class="form2-container">
               <form @submit.prevent="upload" id="uploadForm" class = "register-form border-gray box-shadow" action ='' enctype= "multipart/form-data">
                 <input type="hidden" name="csrf_token" :value="csrf"/>
-                <label class = "form-control-label">
+                <label class = "form-control-label" id="rfc11">
                 Username
                 </label>
-                <input type="text" name="username" class = "form-control"></input>
+                <input type="text" name="username" class = "form-control" id="rfc1"></input>
   
-                <label class = "form-control-label">
+                <label class = "form-control-label" id="rfc22">
                 Password
                 </label>
-                <input type="password" name="password" class = "form-control"></input>
+                <input type="password" name="password" class = "form-control" id="rfc2"></input>
   
-                <label class = "form-control-label">
+                <label class = "form-control-label" id="rfc33">
                 Fullname
                 </label>
-                <input type="text" name="name" class = "form-control"></input>
+                <input type="text" name="name" class = "form-control"id="rfc3"></input>
 
-                <label class = "form-control-label">
+                <label class = "form-control-label" id="rfc44">
                 Email
                 </label>
-                <input type="text" name="email" class = "form-control"></input>
+                <input type="text" name="email" class = "form-control" id="rfc4"></input>
   
-                <label class = "form-control-label">
+                <label class = "form-control-label" id="rfc55">
                 Location
                 </label>
-                <input type="text" name="location" class = "form-control"></input>
+                <input type="text" name="location" class = "form-control" id="rfc5"></input>
   
-                <label class = "form-control-label">
+                <label class = "form-control-label" id="rfc66">
                 Biography
                 </label>
-                <textarea name="biography" rows="3" cols = "10" class = "form-control"></textarea>
+                <textarea name="biography" rows="3" cols = "10" class = "form-control" id="rfc6"></textarea>
   
-                <label class="form-control-label">
+                <label class="form-control-label" id="rfc77">
                 Photo
                 </label>
-                <input type="file" name="photo"></input>
+                <input type="file" name="photo" id="rfc7"></input>
   
-                <button type="submit" name="register" class="btn btn-success form-control margin-top-30">Register</button>
+                <button type="submit" name="register" class="btn btn-success form-control margin-top-30" id="registerBTN">Register</button>
               </form>
-          </div>
         </div>
   
       </div>
@@ -218,69 +216,68 @@ const AddNewCar ={
           </div>
         </div>
         <!--Form-->
-        <div class="newcarform-container">
-          <div class="newcarform-container">
+        <div class="newcarform2-container">
               <form @submit.prevent="upload" id="uploadForms" class = "addnewcar-form border-gray box-shadow" action ='' enctype= "multipart/form-data">
                 <input type="hidden" name="csrf_token" :value="csrf"/>
-                <label class = "form-control-label">
+                <label class = "form-control-label" id = "fc11">
                 Make
                 </label>
-                <input type="text" name="make" class = "form-control "></input>
+                <input type="text" name="make" class = "form-control " id = "fc1" placeholder="Tesla"></input>
   
-                <label class = "form-control-label">
+                <label class = "form-control-label" id = "fc22">
                 Model
                 </label>
-                <input type="text" name="model" class = "form-control"></input>
+                <input type="text" name="model" class = "form-control" id = "fc2" placeholder="Model S"></input>
   
-                <label class = "form-control-label">
+                <label class = "form-control-label" id = "fc33">
                 Colour
                 </label>
-                <input type="text" name="colour" class = "form-control"></input>
+                <input type="text" name="colour" class = "form-control" id = "fc3" placeholder="Red"></input>
 
-                <label class = "form-control-label">
+                <label class = "form-control-label" id = "fc44">
                 Year
                 </label>
-                <input type="text" name="year" class = "form-control"></input>
+                <input type="text" name="year" class = "form-control" id = "fc4" placeholder="2019"></input>
   
-                <label class = "form-control-label">
+                <label class = "form-control-label" id = "fc55">
                 Price
                 </label>
-                <input type="text" name="price" class = "form-control"></input>
+                <input type="text" name="price" class = "form-control" id = "fc5" placeholder="62888"></input>
 
-                <label class = "form-control-label">
+                <label class = "form-control-label" id = "fc66">
                 Car Type
                 </label>
-                <select type="text" name="car_type" class = "form-control">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="fiat">Fiat</option>
-                    <option value="audi">Audi</option>
+                <select type="text" name="car_type" class = "form-control" id = "fc6">
+                    <option value="suv">SUV</option>
+                    <option value="sedan">Sedan</option>
+                    <option value="sport">Sport</option>
+                    <option value="hatchback">Hatchback</option>
+                    <option value="coupe">Coupe</option>
                 </select>
 
-                <label class = "form-control-label">
+                <label class = "form-control-label" id = "fc77">
                 Transmission
                 </label>
-                <select type="text" name="transmission" class = "form-control">
+                <select type="text" name="transmission" class = "form-control" id = "fc7">
                     <option value="automatic">Automatic</option>
                     <option value="manual">Manual</option>
                 </select>
   
-                <label class = "form-control-label">
+                <label class = "form-control-label" id = "fc88">
                 Description
                 </label>
-                <textarea name="description" rows="3" cols = "10" class = "form-control"></textarea>
+                <textarea name="description" rows="3" cols = "10" class = "form-control" id = "fc8"></textarea>
   
-                <label class="form-control-label">
+                <label class="form-control-label" id = "fc99">
                 Upload Photo
                 </label>
-                <input type="file" name="photo"></input>
+                <input type="file" name="photo" id = "fc9"></input>
   
-                <button type="submit" name="save" class="btn btn-success form-control margin-top-30">Save</button>
+                <button type="submit" name="save" class="btn btn-success form-control margin-top-30" id = "savebtn">Save</button>
                 
                 <input type="hidden" name="user_id"></input>
   
               </form>
-          </div>
         </div>
   
       </div>
@@ -350,7 +347,7 @@ const Login = {
         <!--Form-->
         <div class="form-container">
           <div class="form-container">
-              <form @submit.prevent="upload" id="uploadForm" class = "register-form border-gray box-shadow" action ='' enctype= "multipart/form-data">
+              <form @submit.prevent="upload" id="uploadForm" class = "login-form border-gray box-shadow" action ='' enctype= "multipart/form-data">
                 <input type="hidden" name="csrf_token" :value="csrf"/>
                 <label class = "form-control-label">
                 Username
@@ -362,7 +359,7 @@ const Login = {
                 </label>
                 <input type="password" name="password" class = "form-control"></input>
   
-                <input type="submit" class="btn btn-success form-control margin-top-30" value="Login"></input>
+                <input type="submit" class="btn btn-success form-control margin-top-30" id="loginbtnn" value="Login"></input>
   
               </form>
           </div>

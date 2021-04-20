@@ -59,7 +59,7 @@ class Cars(db.Model):
     year = db.Column(db.String(80), nullable=False)
     transmission = db.Column(db.String(80), nullable=False)
     car_type = db.Column(db.String(100), nullable=False)
-    price = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Float, nullable=False)
     photo = db.Column(db.String(200), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('Users.id', ondelete='CASCADE'), nullable=False)
 
