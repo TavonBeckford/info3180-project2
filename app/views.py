@@ -243,7 +243,7 @@ def unauthorized_handler():
     return jsonify(error=failure)
 
 
-
+# gets the details of a specific car
 @app.route('api/cars/<car_id>',methods=["GET"])
 def car_details(car_id):
     try:
@@ -260,6 +260,30 @@ def car_details(car_id):
                 details.append(d)
             return jsonify(details=details),201
         print ("Car id not found")
+    except Exception as e:
+        print(e)
+
+        error="Internal server error"
+        return jsonify(error=error),401
+    
+    
+    # gets details of a user
+@app.route('/api/users/<user_id>',methods=["GET"])
+def user_details(user_id):
+    try:
+        details =[]
+        allusers= db.session.query(Users).order_by(Users.id.desc()).all()
+
+        for user in allusers:
+            if user_id == user.id:
+                d={"photo": os.path.join(app.config['GET_FILE'], user.photo),
+                "username": user.username,
+                "name": user.name, "email": user.email,"location":user.location,
+                "biography":user.biography, "date joined":user.date_joined}
+
+                details.append(d)
+            return jsonify(details=details),201
+        print ("User not found")
     except Exception as e:
         print(e)
 
