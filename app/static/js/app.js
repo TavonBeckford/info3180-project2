@@ -535,6 +535,92 @@ const Explore = {
   
 };
 
+const Profile = Vue.component("profile",{
+  template: `
+  <div>
+    <div class="card row" style="width:100%">
+        <div class="card-body row profile-haeder" style="padding: 0;" >
+          <img id="profile_image" class="col-md-2" v-bind:src=user.profile_image style="width: 100%; height: 15%" />
+          <div id="profile_info" class="col-md-7" style="margin-top: 0px;padding-right: 0;">
+            <strong><label>{{ user.firstname }}</label>
+            <label>{{ user.lastname }}</label></strong>
+            <div id="local" style="color: gray;">
+              <label>{{ user.location }}</label><br>
+              <label>{{ user.joined_on }}</label>
+            </div>
+            <p id="bio" style="color: gray;">
+              {{ user.bio }}
+            </p>
+          </div>
+          <div id="follows" class="col-sm-3" style="padding-left:  0; padding-right:  0;">
+            <strong><label id="posts" class="col-md-5">{{ user.postCount }}</label>
+            <label id="followers" class="col-md-5">{{ user.followers }}</label></strong> <br>
+            <label class="col-md-5" style="color: gray; font-weight: 600; font-size: larger;">Posts</label>
+            <label class="col-md-6" style="color: gray; font-weight: 600; font-size: larger;">Followers</label>
+            <label id="follow-btn" class="btn btn-primary" v-on:click="follow" style="width:100%; margin-top: 17%;">Follow</label>
+          </div>
+        </div>
+    </div>
+    
+    <div id="post-area" class="row" style="width:100%;">
+      <div class="profile-post col-md-4" style="margin-top:3%;" v-for="post in user.posts">
+          <img v-bind:src=post.photo style="width: 100%;" />
+      </div>
+    </div>
+  </div>
+  `,
+  methods: {
+    follow: function(){
+      self = this;
+      
+      fetch(`/api/users/${self.$route.params.user_id}/follow`,{
+        method: "POST",
+        headers: {
+       
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify({"follower_id": JSON.parse(localStorage.current_user).id, "user_id": self.$route.params.user_id})
+      }).then(function(response){
+        return response.json();
+      }).then(function(jsonResponse){
+        
+        if(jsonResponse.hasOwnProperty("message") && jsonResponse.status==201 ){
+          $("#follow-btn")[0].innerHTML="Following";
+          $("#follow-btn").removeClass("btn-primary");
+          $("#follow-btn").addClass("btn-success")
+          ++ self.user.followers;
+        }
+        
+      }).catch(function(error){
+        console.log(error)
+      });
+    }
+  },
+  created: function(){
+    self = this;
+    
+    fetch(`/api/users/${self.$route.params.user_id}/posts`,{
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${JSON.parse(localStorage.current_user).token}`
+      }
+    }).then(function(response){
+      return response.json();
+    }).then(function(jsonResponse){
+      self.user = jsonResponse.post_data;
+    }).catch(function(error){
+      console.log(error);
+    });
+  },
+  data: function(){
+    return {
+      user: null,
+      cu_id: (this.$route.params.user_id == JSON.parse(localStorage.current_user).id) ? true : false
+    }
+  }
+});
+
+
 
 
 const NotFound = {
@@ -556,6 +642,7 @@ const routes = [
     { path: '/register', component: Register },
     { path: '/cars/new', component: AddNewCar },
     { path: '/explore', component: Explore },
+    { path: "/users/:user_id", name:"users",component: Profile},
     { path: '/login', component: Login },
     { path: '/logout', component: Logout },
     // This is a catch all route in case none of the above matches
