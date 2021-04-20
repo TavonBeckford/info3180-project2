@@ -241,6 +241,32 @@ def unauthorized_handler():
     #NOT SURE WHY ITS NOT RENDERING PROPERLY FOR EVERYTHING SO I DID THIS INSTEAD FOR THE LOGIN CHECK SO YOU CAN LOGOUT
     failure = "User not logged in to use logout option"
     return jsonify(error=failure)
+
+
+
+@app.route('api/cars/<car_id>',methods=["GET"])
+def car_details(car_id):
+    try:
+        details =[]
+        allcars= db.session.query(Cars).order_by(Cars.id.desc()).all()
+
+        for car in allcars:
+            if car_id == car.id:
+                d={"photo": os.path.join(app.config['GET_FILE'], car.photo),
+                "description": car.description,
+                "year": car.year, "make": car.make,"model":car.model,
+                "colour":car.colour, "transmission":car.transmission,
+                "car_type":car.car_type,"price":car.price, "user_id":car.user_id}
+                details.append(d)
+            return jsonify(details=details),201
+        print ("Car id not found")
+    except Exception as e:
+        print(e)
+
+        error="Internal server error"
+        return jsonify(error=error),401
+    
+    
 ###
 # The functions below should be applicable to all Flask apps.
 ###
