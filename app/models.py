@@ -1,7 +1,7 @@
 from . import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash
-
+from flask_login._compat import unicode
 
 
 class Users(db.Model):
@@ -75,20 +75,15 @@ class Cars(db.Model):
         self.photo= photo
         self.user_id= user_id
 
-    def get_id(self):
-        try:
-            return unicode(self.id)  # python 2 support
-        except NameError:
-            return str(self.id)  # python 3 support
 
-    def is_authenticated(self):
-        return True
 
-    def is_active(self):
-        return True
+class Favs(db.Model):
+    __tablename__ = 'Favs'
 
-    def is_anonymous(self):
-        return False
+    id = db.Column(db.Integer, primary_key=True)
+    car_id = db.Column(db.Integer, db.ForeignKey('Cars.id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('Users.id', ondelete='CASCADE'), nullable=False)
 
-    def __repr__(self):
-        return '<User %r>' % (self.username)
+    def __init__(self, car_id, user_id):
+        self.car_id = car_id
+        self.user_id= user_id

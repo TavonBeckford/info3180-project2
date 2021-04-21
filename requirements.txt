@@ -23,6 +23,8 @@ Flask-SQLAlchemy
 Flask-Migrate
 Flask-Script
 Flask-Login
+flask-restful
+flask-jwt
 psycopg2
 
 # ----------------------

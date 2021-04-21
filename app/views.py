@@ -7,12 +7,13 @@ This file creates your application.
 import os
 import datetime
 from app import app, db, login_manager, csrf
-from flask import render_template, request, redirect, url_for, flash, jsonify, g
+from flask import render_template, request, redirect, url_for, flash, jsonify, g, make_response
 from flask_login import login_user, logout_user, current_user, login_required
 from app.forms import LoginForm, RegisterForm, NewCarForm
-from app.models import Users, Cars
+from app.models import Users, Cars, Favs
 from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash
+from sqlalchemy import or_
 
 
 #Using JWT
@@ -239,56 +240,92 @@ def load_user(user_id):
 @login_manager.unauthorized_handler
 def unauthorized_handler():
     #NOT SURE WHY ITS NOT RENDERING PROPERLY FOR EVERYTHING SO I DID THIS INSTEAD FOR THE LOGIN CHECK SO YOU CAN LOGOUT
-    failure = "User not logged in to use logout option"
+    failure = "User not logged in"
     return jsonify(error=failure)
 
 
 # gets the details of a specific car
-@app.route('api/cars/<car_id>',methods=["GET"])
+@app.route('/api/cars/<car_id>',methods=["GET"])
+@login_required
+@requires_auth
 def car_details(car_id):
-    try:
-        details =[]
-        allcars= db.session.query(Cars).order_by(Cars.id.desc()).all()
-
-        for car in allcars:
-            if car_id == car.id:
-                d={"photo": os.path.join(app.config['GET_FILE'], car.photo),
-                "description": car.description,
-                "year": car.year, "make": car.make,"model":car.model,
-                "colour":car.colour, "transmission":car.transmission,
-                "car_type":car.car_type,"price":car.price, "user_id":car.user_id}
-                details.append(d)
-            return jsonify(details=details),201
-        print ("Car id not found")
-    except Exception as e:
-        print(e)
-
-        error="Internal server error"
-        return jsonify(error=error),401
+    if request.method=="GET":
+        try:
+            details= Cars.query.filter_by(id=car_id).first()
+            if details is not None:
+                return make_response(jsonify(details=details),201)
+            else:
+                return make_response(jsonify(response="Car not found"))
+        except Exception as e:
+            print(e)
+            error="Internal server error"
+            return make_response(jsonify(error=error)),401
     
-    
-    # gets details of a user
+#add car to favourites for logged in user
+@app.route('/api/cars/<car_id>/favourite',methods=["POST"])
+@login_required
+@requires_auth
+def add_user_fav_car(username,car_id):
+    if request.method=="POST":
+        user= Users.query.filter_by(username=username).first()
+        fav= Favs.query.filter_by(user_id=user.id,car_id=car_id).first()
+        if fav is None:
+            try:
+                db.session.add(fav)
+                db.session.commit()
+                return make_response(jsonify(response="Added to Favourites"))
+            except: 
+                make_response(jsonify(response="Could not be found"))
+        else:
+            return make_response(jsonify(response="Item is already in Favourites"))
+
+#search for cars by make or model
+@app.route('/api/search',methods=["GET"])
+@login_required
+@requires_auth
+def search_cars(username):
+    if request.method=="GET":
+        query= request.args.get('query')
+        query="%{}%".format(query)
+        cars= Cars.query.filter(or_(Cars.model.like(query), Cars.make.like(query)))
+        for car in cars:
+                return make_response(jsonify({"cars":[car.to_json]}))
+    else:
+        return make_response(jsonify(response="Could not be found"))
+
+# gets details of a user
 @app.route('/api/users/<user_id>',methods=["GET"])
+@login_required
+@requires_auth
 def user_details(user_id):
-    try:
-        details =[]
-        allusers= db.session.query(Users).order_by(Users.id.desc()).all()
+    if request.method =="GET":
+        try:
+            details= Users.query.filter_by(id=user_id).first()
+            if details is not None:
+                return make_response(jsonify(details=details),201)
+            else:
+                return make_response(jsonify(response="User not found"))
+        except Exception as e:
+            print(e)
+            error="Internal server error"
+            return make_response(jsonify(error=error)),401
 
-        for user in allusers:
-            if user_id == user.id:
-                d={"photo": os.path.join(app.config['GET_FILE'], user.photo),
-                "username": user.username,
-                "name": user.name, "email": user.email,"location":user.location,
-                "biography":user.biography, "date joined":user.date_joined}
 
-                details.append(d)
-            return jsonify(details=details),201
-        print ("User not found")
-    except Exception as e:
-        print(e)
+@app.route('/api/users/<user_id>/favourites',methods=["GET"])
+@login_required
+@requires_auth
+#CSRF token to be added 
+def user_fav_car(username,user_id):
+    if request.method =="GET":
+        user= Users.query.filter_by(username=username).first()
+        favs=db.session.query(Car).join(Favs).filter(Favs.user_id==user.id)
 
-        error="Internal server error"
-        return jsonify(error=error),401
+        if favs is not None:
+            for fav in favs:
+                return make_response(jsonify({"favs":[fav.to_json]}))
+        else:
+            return make_response(jsonify(response="Could not be found"))
+
     
     
 ###
