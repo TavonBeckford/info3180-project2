@@ -467,12 +467,12 @@ const Logout = {
 const Explore = {
     name:'explore',
     template:`
+    <h2> Explore </h2>
       <div class="post-container">
   
         <div class="flex-container flex-column width70">
   
           <div v-for="post in posts" class="posts border-gray box-shadow">
-  
             <div class="post-image">
               <img v-bind:src="car.photo" alt=""></img>
             </div>
@@ -508,6 +508,7 @@ const Explore = {
     },
     created: function(){
       let self = this
+      //fetch('/api/search',{
       fetch('/api/cars',{
         method: 'GET',
         headers:{
@@ -535,11 +536,12 @@ const Explore = {
   
 };
 
-const Profile = Vue.component("profile",{
+const Profile = {
+  name:'profile',
   template: `
   <div>
     <div class="card row" style="width:100%">
-        <div class="card-body row profile-haeder" style="padding: 0;" >
+        <div class="card-body row profile-header" style="padding: 0;" >
           <img id="profile_image" class="col-md-2" v-bind:src=user.profile_image style="width: 100%; height: 15%" />
           <div id="profile_info" class="col-md-7" style="margin-top: 0px;padding-right: 0;">
             <strong><label>{{ user.firstname }}</label>
@@ -618,7 +620,7 @@ const Profile = Vue.component("profile",{
       cu_id: (this.$route.params.user_id == JSON.parse(localStorage.current_user).id) ? true : false
     }
   }
-});
+};
 
 
 

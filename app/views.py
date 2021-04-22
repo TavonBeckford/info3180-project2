@@ -318,7 +318,7 @@ def user_details(user_id):
 def user_fav_car(username,user_id):
     if request.method =="GET":
         user= Users.query.filter_by(username=username).first()
-        favs=db.session.query(Car).join(Favs).filter(Favs.user_id==user.id)
+        favs=db.session.query(Cars).join(Favs).filter(Favs.user_id==user.id)
 
         if favs is not None:
             for fav in favs:
