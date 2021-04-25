@@ -625,6 +625,123 @@ const Profile = {
 
 
 
+const UserInfo = {
+        name: "userinfo",
+        props: ['user_id'],
+        template: `
+    
+        <div class= "user-container">
+            <div class = "usercard">
+                <div class = "card-horizonatal">
+                    <img id="user_img" :src="'/static/uploads/' + user.photo" alt="user img" class = "card-img-left"> 
+                </div>
+                <div class="user-card-body">
+                    <div class="form-col">
+                    <p class = "user-name">{{user.name}}</p>   
+                    <p class = "card-at"> @{{user.username}} </p> 
+                    </div> 
+                    <p class = "card-text"> {{user.biography}} </p> <br>
+                
+                    <div class = "form-col">
+                        <div class = "row">
+                            <p class = "card-text">Email:</p>
+                            <p class="card-info"> {{user.email}} </p> <br>
+                        </div>
+                        <div class = "row">
+                            <p class = "card-text">Location:</p>
+                            <p class="card-info"> {{user.location}} </p> <br>
+                        </div>
+                        <div class = "row">
+                            <p class = "card-text">Joined:</p>
+                            <p class="card-info"> {{user.date_joined}} </p> <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       
+        
+        <h2 class="f_cars_lbl"> Cars Favourited </h2>
+        
+    <ul>
+ 
+        <li v-for="car in allcars" class="car_Card">
+            <div class = "details-card-group">
+                <div class ="details-card" style="width: 22rem;">
+                    <img class="card-img-top" id="car_img" :src="'/static/uploads/'  + car.photo" alt="car img"> 
+                        <div class = "card-body">
+                            <div class = "top-card">
+                                <h5 class = "card-title">  {{car.year}}  </h5>
+                                <h5 class= "card-title">  {{car.make}}  </h5>
+                                <div class="price">
+                                <img id = "price-tag" src = "/static/price-tag.png"><p class="card-text">  {{car.price}}  </p>
+                                </div>
+                            </div>
+                            <p class="card-text">  {{car.model}}  </p>
+                        </div>    
+                   
+                    <button @click="carinfo(car.id)" class="btn btn-primary btn-block"> View More Details </button>
+                </div>
+            </div>
+        </li>
+    </ul>
+    
+        </div>
+        `,
+        data: function() {
+            return {
+                allcars: [],
+                user:{}
+            }
+         },created: function(){
+            let self = this;
+            this.viewUserinfo(self.user_id);
+            this.carsfavourited(self.user_id);
+        },
+    
+        methods: {
+            viewUserinfo(user_id){
+                let self = this;
+                fetch('/api/users/' + user_id, {
+                    method: 'GET',
+                    headers:{ 'Authorization': 'Bearer ' + sessionStorage.getItem('token'),'X-CSRFToken': token } 
+                   })
+                    .then(function (response) {
+                    return response.json();
+                    })
+                    .then(function (jsonResponse) {
+                    self.user=jsonResponse.user;
+                    })
+                    .catch(function (error) {
+                    //this.errormessage = "Something went wrong"
+                    console.log(error);
+                    });
+    
+                },
+                carsfavourited: function(user_id){
+                    let self = this;
+                    fetch("/api/users/" + user_id + "/favourites", { method: 'GET', headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('token'), 'X-CSRFToken': token }, credentials: 'same-origin'})
+                    .then(function (response) {
+                        return response.json();
+                        }).then(function (jsonResponse) {
+                            // display a success message
+                            self.allcars=jsonResponse.favouritecars
+                            console.log(jsonResponse);
+                        }).catch(function (error) {
+                                console.log(error);
+                            });
+                },
+                carinfo: function(car_id){ 
+                    this.$router.push("/cars/"+car_id)
+                   
+                },
+    
+    
+            },
+            
+        };
+
+
+
 const NotFound = {
     name: 'NotFound',
     template: `
