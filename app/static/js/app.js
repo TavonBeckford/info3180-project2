@@ -81,7 +81,7 @@ const Home = {
 
       <div class="login-desc">
         <p>United Auto Sales provides the fastest, easiest and<br> most user friendly way to buy or sell cars online.
-        Find a<br> Great Price on the Vechile You Want.</p>
+        Find a<br> Great Price on the Vehicle You Want.</p>
       </div>
 
       <div class="login-buttons">
