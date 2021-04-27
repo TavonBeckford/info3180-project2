@@ -689,7 +689,6 @@ const routes = [
     { path: '/register', component: Register },
     { path: '/cars/new', component: AddNewCar },
     { path: '/explore', component: Explore },
-    { path: "/users/:user_id", name:"users",component: Profile},
     { path: '/login', component: Login },
     { path: '/logout', component: Logout },
     // This is a catch all route in case none of the above matches
